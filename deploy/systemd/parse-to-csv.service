@@ -1,0 +1,16 @@
+# /etc/systemd/system/parse-to-csv.service  (started by parse-to-csv.timer)
+[Unit]
+Description=Parse site to CSV
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=automation
+WorkingDirectory=/opt/cron-automation-scripts
+ExecStart=/opt/cron-automation-scripts/.venv/bin/python -m scripts.parse_to_csv
+Nice=10
+# Hardening: /usr, /boot and /etc are read-only for the job, private /tmp
+ProtectSystem=full
+PrivateTmp=true
+NoNewPrivileges=true

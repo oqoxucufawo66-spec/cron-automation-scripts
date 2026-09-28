@@ -1,0 +1,18 @@
+[project]
+name = "cron-automation-scripts"
+description = "Scheduled Python scripts: web parser to CSV, backup/cleanup, Telegram reports"
+version = "1.0.0"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Vladimir Matusevichus" }]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF", "ASYNC"]
+ignore = ["RUF001", "RUF002", "RUF003"]  # Cyrillic text in strings/comments is intentional
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

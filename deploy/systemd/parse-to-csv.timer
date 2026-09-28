@@ -1,0 +1,14 @@
+# /etc/systemd/system/parse-to-csv.timer
+# sudo systemctl daemon-reload && sudo systemctl enable --now parse-to-csv.timer
+# Check: systemctl list-timers | grep parse-to-csv ; logs: journalctl -u parse-to-csv.service
+[Unit]
+Description=Schedule: Parse site to CSV
+
+[Timer]
+OnCalendar=*-*-* 07:00:00
+# Run a missed job after the server was off
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

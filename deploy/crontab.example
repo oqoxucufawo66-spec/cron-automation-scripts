@@ -1,0 +1,22 @@
+# Example crontab for cron-automation-scripts. Install: crontab -e  (or: crontab deploy/crontab.example)
+# Project path: /opt/cron-automation-scripts, venv: /opt/cron-automation-scripts/.venv
+# flock -n prevents overlapping runs if a job takes longer than its interval.
+# Times are in the server timezone (check with: timedatectl).
+
+SHELL=/bin/bash
+PATH=/usr/local/bin:/usr/bin:/bin
+APP=/opt/cron-automation-scripts
+PY=/opt/cron-automation-scripts/.venv/bin/python
+
+# m  h  dom mon dow  command
+# Parse the site every day at 07:00 -> output/quotes_YYYY-MM-DD.csv
+0  7  *   *   *    cd $APP && flock -n /tmp/parse.lock $PY -m scripts.parse_to_csv >> logs/parse.log 2>&1
+
+# Backup at 03:30, keep 14 days (min 3 archives), remove *.log older than 30 days
+30 3  *   *   *    cd $APP && flock -n /tmp/backup.lock $PY -m scripts.backup_cleanup --clean logs --notify >> logs/backup.log 2>&1
+
+# Report to Telegram every day at 09:00
+0  9  *   *   *    cd $APP && flock -n /tmp/report.lock $PY -m scripts.report_to_telegram >> logs/report.log 2>&1
+
+# Every 15 minutes during working hours on weekdays (example of a frequent job)
+# */15 9-18 * * 1-5 cd $APP && $PY -m scripts.parse_to_csv --max-pages 1 >> logs/parse.log 2>&1

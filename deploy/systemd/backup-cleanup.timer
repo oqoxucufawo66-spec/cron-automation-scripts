@@ -1,0 +1,14 @@
+# /etc/systemd/system/backup-cleanup.timer
+# sudo systemctl daemon-reload && sudo systemctl enable --now backup-cleanup.timer
+# Check: systemctl list-timers | grep backup-cleanup ; logs: journalctl -u backup-cleanup.service
+[Unit]
+Description=Schedule: Backup and cleanup
+
+[Timer]
+OnCalendar=*-*-* 03:30:00
+# Run a missed job after the server was off
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

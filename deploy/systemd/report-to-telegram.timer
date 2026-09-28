@@ -1,0 +1,14 @@
+# /etc/systemd/system/report-to-telegram.timer
+# sudo systemctl daemon-reload && sudo systemctl enable --now report-to-telegram.timer
+# Check: systemctl list-timers | grep report-to-telegram ; logs: journalctl -u report-to-telegram.service
+[Unit]
+Description=Schedule: Daily report to Telegram
+
+[Timer]
+OnCalendar=*-*-* 09:00:00
+# Run a missed job after the server was off
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target
